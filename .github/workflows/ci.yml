@@ -23,6 +23,8 @@ jobs:
           test -f README.md
           test -f LICENSE
           test -f .github/pull_request_template.md
+          test -f docs/testing-strategy.md
+          test -f docs/release.md
 
       # TODO: Add TypeScript typecheck/tests and npm audit when package.json exists.
       # TODO: Add Swift package tests when Package.swift exists.
