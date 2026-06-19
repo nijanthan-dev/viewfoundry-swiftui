@@ -42,6 +42,14 @@ test -f docs/testing-strategy.md
 Testing decisions and staged command contracts live in
 [docs/testing-strategy.md](docs/testing-strategy.md).
 
+## Releases
+
+Version tags matching `v*.*.*` publish GitHub Releases with generated release
+notes. The repo is still scaffold-only, so releases do not publish packages or
+binaries yet.
+
+Release steps and limits live in [docs/release.md](docs/release.md).
+
 ### Docker Checks
 
 Docker covers portable repo checks only. It uses a small Node image so the same

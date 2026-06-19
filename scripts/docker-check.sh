@@ -4,6 +4,7 @@ set -eu
 test -f README.md
 test -f LICENSE
 test -f docs/testing-strategy.md
+test -f docs/release.md
 
 has_script() {
   node -e 'const pkg = require("./package.json"); process.exit(pkg.scripts && Object.prototype.hasOwnProperty.call(pkg.scripts, process.argv[1]) ? 0 : 1)' "$1"
