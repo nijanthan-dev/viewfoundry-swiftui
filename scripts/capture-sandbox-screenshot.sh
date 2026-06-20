@@ -9,7 +9,12 @@ swiftui_entry_file="examples/Sandbox/ViewFoundrySandbox/Generated/ViewFoundryGen
 request_path="${VIEWFOUNDRY_RUNTIME_REQUEST:-examples/runtime-request.sample.json}"
 run_id="${VIEWFOUNDRY_RUN_ID:-run-$(date -u +%Y%m%dT%H%M%SZ)-$$}"
 artifact_root="${VIEWFOUNDRY_RUN_DIR:-.viewfoundry/runs/$run_id}"
-simulator_override_destination="${VIEWFOUNDRY_SIMULATOR_DESTINATION:-${VIEWFOUNDRY_SIMULATOR_XCODE_DESTINATION:-${VIEWFOUNDRY_SANDBOX_DESTINATION:-}}}"
+simulator_override_destination="${VIEWFOUNDRY_SIMULATOR_DESTINATION:-${VIEWFOUNDRY_SIMULATOR_XCODE_DESTINATION:-}}"
+if [ -z "$simulator_override_destination" ] && [ -n "${VIEWFOUNDRY_SANDBOX_DESTINATION:-}" ]; then
+  case "$VIEWFOUNDRY_SANDBOX_DESTINATION" in
+    *id=*) simulator_override_destination="$VIEWFOUNDRY_SANDBOX_DESTINATION" ;;
+  esac
+fi
 simulator_override_udid="${VIEWFOUNDRY_SIMULATOR_UDID:-${VIEWFOUNDRY_SIMULATOR_ID:-}}"
 simulator_override_name="${VIEWFOUNDRY_SIMULATOR_NAME:-${VIEWFOUNDRY_DEVICE_NAME:-}}"
 simulator_override_os="${VIEWFOUNDRY_SIMULATOR_OS:-${VIEWFOUNDRY_DEVICE_OS:-}}"
