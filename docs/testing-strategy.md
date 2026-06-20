@@ -206,6 +206,9 @@ Current local command:
 npm run sandbox:screenshot
 ```
 
+The runner builds `VIEWFOUNDRY_BUILD_CONFIGURATION` (`Debug` by default) and
+installs the app from the same derived-data configuration directory.
+
 If simctl discovery is unreliable, force a target:
 
 ```sh

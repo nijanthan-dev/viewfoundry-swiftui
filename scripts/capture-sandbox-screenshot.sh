@@ -25,7 +25,8 @@ screenshot_path="$screenshots_dir/primary.png"
 metadata_path="$artifact_root/screenshot-runner.json"
 final_report_path="$artifact_root/final-report.json"
 derived_data="${VIEWFOUNDRY_DERIVED_DATA:-$artifact_root/DerivedData}"
-app_path="$derived_data/Build/Products/Debug-iphonesimulator/ViewFoundrySandbox.app"
+build_configuration="${VIEWFOUNDRY_BUILD_CONFIGURATION:-Debug}"
+app_path="$derived_data/Build/Products/$build_configuration-iphonesimulator/ViewFoundrySandbox.app"
 build_log="$artifact_root/build.log"
 simctl_log="$artifact_root/simctl.log"
 selector_log="$artifact_root/simulator-selector.log"
@@ -77,6 +78,7 @@ write_report() {
   export VIEWFOUNDRY_PROJECT_PATH="$project_path"
   export VIEWFOUNDRY_SCHEME="$scheme"
   export VIEWFOUNDRY_BUNDLE_ID="$bundle_id"
+  export VIEWFOUNDRY_BUILD_CONFIGURATION_VALUE="$build_configuration"
   export VIEWFOUNDRY_SWIFTUI_ENTRY_FILE="$swiftui_entry_file"
   export VIEWFOUNDRY_SCREENSHOT_PATH="$screenshot_path"
   export VIEWFOUNDRY_METADATA_PATH="$metadata_path"
@@ -162,6 +164,7 @@ const metadata = {
   projectPath: env.VIEWFOUNDRY_PROJECT_PATH,
   scheme: env.VIEWFOUNDRY_SCHEME,
   bundleId: env.VIEWFOUNDRY_BUNDLE_ID,
+  buildConfiguration: env.VIEWFOUNDRY_BUILD_CONFIGURATION_VALUE,
   xcodeDestination: env.VIEWFOUNDRY_XCODE_DESTINATION,
   appPath: env.VIEWFOUNDRY_APP_PATH,
   screenshotPath: env.VIEWFOUNDRY_SCREENSHOT_PATH,
@@ -400,6 +403,7 @@ xcode_destination="$(json_get "$simulator_meta_json" destination)"
 if ! "$xcodebuild_cmd" \
   -project "$project_path" \
   -scheme "$scheme" \
+  -configuration "$build_configuration" \
   -destination "$xcode_destination" \
   -derivedDataPath "$derived_data" \
   CODE_SIGNING_ALLOWED=NO \
