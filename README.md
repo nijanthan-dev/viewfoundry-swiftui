@@ -43,6 +43,8 @@ npm run typecheck
 npm run build
 npm test
 npm run check
+npm run secrets
+pre-commit run --all-files
 ```
 
 Current scaffold checks:
@@ -53,6 +55,8 @@ test -f README.md
 test -f LICENSE
 test -f docs/testing-strategy.md
 test -f docs/runtime-contract.md
+test -f .gitleaks.toml
+test -f .pre-commit-config.yaml
 test -f .codex-plugin/plugin.json
 test -f skills/viewfoundry/SKILL.md
 test -f schemas/runtime-contract.schema.json
@@ -103,6 +107,23 @@ node packages/runtime/dist/src/cli.js \
 ```
 
 The CLI validates the request and prints a deterministic blocked final report.
+
+## Secret Scanning
+
+Run Gitleaks before publishing changes that touch credentials, workflow files, or
+dependency metadata:
+
+```sh
+npm run secrets
+```
+
+Install the local hook once per checkout:
+
+```sh
+pre-commit install
+```
+
+CI and pre-commit both run Gitleaks.
 
 ## Project Links
 

@@ -13,6 +13,8 @@ npm run typecheck
 npm run build
 npm test
 npm run check
+npm run secrets
+pre-commit run --all-files
 ```
 
 Run these scaffold checks:
@@ -25,6 +27,8 @@ test -f AGENTS.md
 test -f .github/pull_request_template.md
 test -f docs/testing-strategy.md
 test -f docs/runtime-contract.md
+test -f .gitleaks.toml
+test -f .pre-commit-config.yaml
 test -f docs/release.md
 test -f .codex-plugin/plugin.json
 test -f schemas/runtime-contract.schema.json
@@ -35,6 +39,7 @@ test -f skills/viewfoundry/assets/swiftui-sandbox-template/ViewFoundrySandboxApp
 test -f package.json
 test -f package-lock.json
 test -f tsconfig.base.json
+test -f scripts/gitleaks-check.sh
 test -f packages/runtime/package.json
 test -f packages/runtime/tsconfig.json
 test -f packages/runtime/src/index.ts
@@ -185,6 +190,8 @@ Required CI:
 
 - `npm run test:unit`
 - `tsc --noEmit`
+- Gitleaks secret scan
+- Optional local pre-commit Gitleaks hook
 - Markdown/link checks, if added
 
 Required later, once image fixtures exist:

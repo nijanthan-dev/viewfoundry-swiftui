@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -32,6 +34,9 @@ jobs:
           test -f .github/pull_request_template.md
           test -f docs/testing-strategy.md
           test -f docs/runtime-contract.md
+          test -f .gitleaks.toml
+          test -f .pre-commit-config.yaml
+          test -f scripts/gitleaks-check.sh
           test -f docs/release.md
           test -f .codex-plugin/plugin.json
           test -f schemas/runtime-contract.schema.json
@@ -48,6 +53,8 @@ jobs:
           grep -q "one issue at a time" AGENTS.md
           grep -q "@Codex" AGENTS.md
           grep -q "co-author or generated-by" AGENTS.md
+          grep -q "Never run \`gh auth refresh\`" AGENTS.md
+          grep -q "No repo-wide secret allowlist" .gitleaks.toml
           grep -q "Create a repo skill" skills/viewfoundry/references/workflow.md
           grep -q "Update the skill" skills/viewfoundry/references/workflow.md
           grep -q "Summary (Why these changes are required)?" .github/pull_request_template.md
@@ -60,6 +67,11 @@ jobs:
 
       - name: Run TypeScript checks
         run: npm run check
+
+      - name: Run secret scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # TODO: Add npm audit once external runtime dependencies exist.
       # TODO: Add Swift package tests when Package.swift exists.

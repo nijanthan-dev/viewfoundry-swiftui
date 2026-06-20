@@ -17,6 +17,9 @@ test -f docs/runtime-contract.md
 test -f package.json
 test -f package-lock.json
 test -f tsconfig.base.json
+test -f .gitleaks.toml
+test -f .pre-commit-config.yaml
+test -f scripts/gitleaks-check.sh
 test -f packages/runtime/package.json
 test -f packages/runtime/tsconfig.json
 test -f packages/runtime/src/index.ts
