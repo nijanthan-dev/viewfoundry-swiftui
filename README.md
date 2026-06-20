@@ -266,11 +266,12 @@ CI and pre-commit both run Gitleaks.
 ## Project Links
 
 - [License](LICENSE)
+- [Contributing](CONTRIBUTING.md)
+- [Security](SECURITY.md)
+- [Code Of Conduct](CODE_OF_CONDUCT.md)
+- [Governance](GOVERNANCE.md)
 - [Testing Strategy](docs/testing-strategy.md)
 - [Runtime Contract](docs/runtime-contract.md)
 - [Plugin Manifest](.codex-plugin/plugin.json)
 - [ViewFoundry Skill](skills/viewfoundry/SKILL.md)
 - [Issues](https://github.com/nijanthanvijayakumar/viewfoundry-swiftui/issues)
-
-Contributing docs are not added yet. Until then, use GitHub issues and small
-pull requests.
