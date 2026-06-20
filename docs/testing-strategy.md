@@ -31,6 +31,10 @@ git status --short
 test -f README.md
 test -f LICENSE
 test -f AGENTS.md
+test -f CONTRIBUTING.md
+test -f SECURITY.md
+test -f CODE_OF_CONDUCT.md
+test -f GOVERNANCE.md
 test -f .github/pull_request_template.md
 test -f docs/testing-strategy.md
 test -f docs/runtime-contract.md
@@ -68,6 +72,10 @@ test -f examples/mockups/mockup.sample.json
 grep -q "one issue at a time" AGENTS.md
 grep -q "@Codex" AGENTS.md
 grep -q "co-author or generated-by" AGENTS.md
+grep -q "@Codex" CONTRIBUTING.md
+grep -q "one pull request per issue" CONTRIBUTING.md
+grep -q "private vulnerability" SECURITY.md
+grep -q "squash merges" GOVERNANCE.md
 grep -q "Create a repo skill" skills/viewfoundry/references/workflow.md
 grep -q "Update the skill" skills/viewfoundry/references/workflow.md
 grep -q "ViewFoundryGeneratedView" examples/Sandbox/ViewFoundrySandbox/ViewFoundrySandboxApp.swift
