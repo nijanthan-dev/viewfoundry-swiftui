@@ -125,9 +125,9 @@ Optional fields:
 `screenshots/*.png` are simulator captures. Each screenshot has metadata in the
 final report:
 
-- `device`
-- `os`
-- `appearance`
+- `device.name`
+- `device.os`
+- `device.appearance`
 - `path`
 - `capturedAt`
 

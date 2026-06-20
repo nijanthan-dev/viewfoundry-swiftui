@@ -24,6 +24,25 @@
         }
       }
     },
+    "CapturedDeviceTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "os", "appearance"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "os": {
+          "type": "string",
+          "minLength": 1
+        },
+        "appearance": {
+          "type": "string",
+          "enum": ["light", "dark", "unspecified"]
+        }
+      }
+    },
     "VisualConstraints": {
       "type": "object",
       "additionalProperties": false,
@@ -204,10 +223,10 @@
     "SimulatorScreenshotArtifact": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["device", "path"],
+      "required": ["device", "path", "capturedAt"],
       "properties": {
         "device": {
-          "$ref": "#/$defs/DeviceTarget"
+          "$ref": "#/$defs/CapturedDeviceTarget"
         },
         "path": {
           "type": "string"
