@@ -159,9 +159,13 @@ final report:
 - `artifactRoot`
 - `swiftuiEntryFile` when SwiftUI generation produced an entry file; passed
   reports must include it
-- `diffReportPath`
+- `diffReportPath` when the primary diff ran; passed reports must include it
 - `errors`
 - `nextActions`
+
+Passed reports must set `primaryPassed` to `true`. Smoke results record
+`screenshotPath` for passed smoke captures. Failed smoke checks record `error`
+and `failureArtifactPath` instead of fabricating a screenshot path.
 
 ## Success Rules
 
@@ -173,7 +177,8 @@ The primary device is the only V1 pixel gate. A run is successful when:
 - no blocking runtime error remains
 
 Extra devices are smoke checks. They can fail without failing the primary pixel
-gate, but the final report must list each smoke failure and its artifact path.
+gate, but the final report must list each smoke failure and its failure artifact
+path.
 
 ## Error And Retry Boundaries
 

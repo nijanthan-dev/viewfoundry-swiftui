@@ -304,7 +304,35 @@
     "SmokeResult": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["device", "passed", "screenshotPath"],
+      "required": ["device", "passed"],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "passed": {
+                "const": true
+              }
+            },
+            "required": ["passed"]
+          },
+          "then": {
+            "required": ["screenshotPath"]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "passed": {
+                "const": false
+              }
+            },
+            "required": ["passed"]
+          },
+          "then": {
+            "required": ["error", "failureArtifactPath"]
+          }
+        }
+      ],
       "properties": {
         "device": {
           "$ref": "#/$defs/DeviceTarget"
@@ -313,6 +341,9 @@
           "type": "boolean"
         },
         "screenshotPath": {
+          "type": "string"
+        },
+        "failureArtifactPath": {
           "type": "string"
         },
         "error": {
@@ -335,7 +366,12 @@
             "required": ["status"]
           },
           "then": {
-            "required": ["swiftuiEntryFile"]
+            "required": ["swiftuiEntryFile", "diffReportPath"],
+            "properties": {
+              "primaryPassed": {
+                "const": true
+              }
+            }
           }
         }
       ],
