@@ -45,6 +45,7 @@ npm run typecheck
 npm run build
 npm test
 npm run sandbox:build
+npm run sandbox:screenshot
 npm run check
 npm run secrets
 pre-commit run --all-files
@@ -133,6 +134,41 @@ VIEWFOUNDRY_SANDBOX_DESTINATION='platform=iOS Simulator,name=iPhone 17 Pro' \
 
 On hosts without Xcode, the command skips with a clear message so portable CI
 can keep running TypeScript and scaffold checks.
+
+Capture a primary screenshot from the runtime request:
+
+```sh
+VIEWFOUNDRY_RUNTIME_REQUEST=examples/runtime-request.sample.json \
+  npm run sandbox:screenshot
+```
+
+Optional overrides:
+
+```sh
+VIEWFOUNDRY_RUN_DIR=... \
+VIEWFOUNDRY_RUN_ID=... \
+VIEWFOUNDRY_DEVICE_NAME='iPhone 17 Pro' \
+VIEWFOUNDRY_DEVICE_OS='iOS 26' \
+VIEWFOUNDRY_APPEARANCE='light' \
+VIEWFOUNDRY_SIMULATOR_DESTINATION='platform=iOS Simulator,id=<udid>' \
+VIEWFOUNDRY_SIMULATOR_NAME='iPhone 17 Pro' \
+VIEWFOUNDRY_SIMULATOR_OS='iOS 26' \
+VIEWFOUNDRY_SIMULATOR_UDID='<udid>' \
+VIEWFOUNDRY_SCREENSHOT_SETTLE_SECONDS=2 \
+VIEWFOUNDRY_XCODEBUILD=xcodebuild \
+VIEWFOUNDRY_XCRUN=xcrun \
+  npm run sandbox:screenshot
+```
+
+If simulator discovery is unavailable or too noisy, set either
+`VIEWFOUNDRY_SIMULATOR_DESTINATION` (preferred) or
+`VIEWFOUNDRY_SIMULATOR_UDID` to force a specific simulator target.
+
+Artifacts:
+
+- `.viewfoundry/runs/<run>/screenshots/primary.png`
+- `.viewfoundry/runs/<run>/screenshot-runner.json`
+- `.viewfoundry/runs/<run>/final-report.json`
 
 ## Runtime Placeholder
 
