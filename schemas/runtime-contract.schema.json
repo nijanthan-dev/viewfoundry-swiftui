@@ -348,7 +348,10 @@
             "required": ["passed"]
           },
           "then": {
-            "required": ["error", "failureArtifactPath"]
+            "required": ["error", "failureArtifactPath"],
+            "not": {
+              "required": ["screenshot"]
+            }
           }
         }
       ],
