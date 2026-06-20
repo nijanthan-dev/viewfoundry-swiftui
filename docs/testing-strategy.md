@@ -14,6 +14,7 @@ npm run typecheck
 npm run build
 npm test
 npm run sandbox:build
+npm run sandbox:screenshot
 npm run check
 npm run secrets
 pre-commit run --all-files
@@ -46,6 +47,7 @@ test -f package.json
 test -f package-lock.json
 test -f tsconfig.base.json
 test -f scripts/gitleaks-check.sh
+test -f scripts/capture-sandbox-screenshot.sh
 test -f packages/runtime/package.json
 test -f packages/runtime/tsconfig.json
 test -f packages/runtime/src/index.ts
@@ -72,6 +74,22 @@ Docker is limited to portable checks. It can run npm-based TypeScript checks
 once `package.json` exists. `npm run sandbox:build` skips honestly when
 `xcodebuild` is unavailable, so Docker cannot verify the SwiftUI binary or iOS
 Simulator behavior.
+
+Local-only screenshot command:
+
+```sh
+VIEWFOUNDRY_RUNTIME_REQUEST=examples/runtime-request.sample.json \
+  npm run sandbox:screenshot
+```
+
+It writes:
+
+- `.viewfoundry/runs/<run>/screenshots/primary.png`
+- `.viewfoundry/runs/<run>/screenshot-runner.json`
+- `.viewfoundry/runs/<run>/final-report.json`
+
+On simulator tooling failures, the command exits non-zero and still writes
+artifacts with actionable error metadata.
 
 ## TypeScript Unit Tests
 
@@ -182,7 +200,23 @@ Planned path:
 4. Compare against `expected` with `pixelmatch`.
 5. Write diff PNGs for inspection.
 
-Expected local command contract:
+Current local command:
+
+```sh
+npm run sandbox:screenshot
+```
+
+The runner builds `VIEWFOUNDRY_BUILD_CONFIGURATION` (`Debug` by default) and
+installs the app from the same derived-data configuration directory.
+
+If simctl discovery is unreliable, force a target:
+
+```sh
+VIEWFOUNDRY_SIMULATOR_DESTINATION='platform=iOS Simulator,id=<udid>' \
+  npm run sandbox:screenshot
+```
+
+Planned diff command:
 
 ```sh
 npm run test:screenshots
