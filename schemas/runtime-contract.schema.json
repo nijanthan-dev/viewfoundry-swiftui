@@ -387,6 +387,7 @@
           "type": "boolean"
         },
         "primaryScreenshot": {
+          "description": "Primary screenshot metadata: device.name, device.os, device.appearance, path, and capturedAt.",
           "$ref": "#/$defs/SimulatorScreenshotArtifact"
         },
         "smokeResults": {

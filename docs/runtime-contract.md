@@ -155,8 +155,9 @@ final report:
 - `runId`
 - `status`
 - `primaryPassed`
-- `primaryScreenshot` when the primary screenshot was captured; passed reports
-  must include it
+- `primaryScreenshot` when the primary screenshot was captured; includes
+  `device.name`, `device.os`, `device.appearance`, `path`, and `capturedAt`;
+  passed reports must include it
 - `smokeResults`
 - `artifactRoot`
 - `swiftuiEntryFile` when SwiftUI generation produced an entry file; passed
