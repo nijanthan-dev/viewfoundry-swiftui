@@ -79,14 +79,34 @@ export function createGeneratorIRFromRuntimeRequest(request: RuntimeRequest): Ge
         }
       ]
     },
-    unsupportedRequestParts: [
-      "Runtime requests are lowered to the first static generator IR subset."
-    ],
+    unsupportedRequestParts: createUnsupportedRequestParts(request),
     assumptions: [
       "Prompt text is emitted as static SwiftUI copy.",
       "Generated output is isolated to the sandbox generated view."
     ]
   };
+}
+
+function createUnsupportedRequestParts(request: RuntimeRequest): string[] | undefined {
+  const unsupported: string[] = [];
+
+  if (request.smokeDevices && request.smokeDevices.length > 0) {
+    unsupported.push(
+      `smokeDevices not rendered: ${request.smokeDevices.map(formatDeviceTarget).join("; ")}`
+    );
+  }
+
+  for (const [category, values] of Object.entries(request.visualConstraints ?? {})) {
+    if (values && values.length > 0) {
+      unsupported.push(`visualConstraints.${category} not rendered: ${values.join("; ")}`);
+    }
+  }
+
+  return unsupported.length > 0 ? unsupported : undefined;
+}
+
+function formatDeviceTarget(device: RuntimeRequest["primaryDevice"]): string {
+  return [device.name, device.os, device.appearance].filter(Boolean).join(" / ");
 }
 
 export function emitSwiftUI(ir: GeneratorIR, entryFile: string): SwiftUIEmission {

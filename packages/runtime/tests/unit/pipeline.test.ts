@@ -45,6 +45,14 @@ describe("mock pipeline", () => {
       assert.equal(PNG.sync.read(await readFile(path.join(tempDir, "mockups", "target.png"))).width, 32);
       assert.match(await readFile(sandboxOutput, "utf8"), /Build a compact onboarding screen/);
       assert.deepEqual(
+        JSON.parse(await readFile(path.join(tempDir, "swiftui", "generation-report.json"), "utf8"))
+          .unsupportedRequestParts,
+        [
+          "visualConstraints.style not rendered: plain SwiftUI",
+          "visualConstraints.layout not rendered: single screen"
+        ]
+      );
+      assert.deepEqual(
         JSON.parse(await readFile(path.join(tempDir, "final-report.json"), "utf8")),
         report
       );
