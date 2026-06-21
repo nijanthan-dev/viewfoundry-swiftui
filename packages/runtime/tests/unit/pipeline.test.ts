@@ -43,7 +43,7 @@ describe("mock pipeline", () => {
       assert.equal(report.steps.find((step) => step.step === "screenshot")?.status, "skipped");
       assert.equal(report.steps.find((step) => step.step === "diff")?.status, "skipped");
       assert.equal(PNG.sync.read(await readFile(path.join(tempDir, "mockups", "target.png"))).width, 32);
-      assert.match(await readFile(sandboxOutput, "utf8"), /Mocked ViewFoundry pipeline output/);
+      assert.match(await readFile(sandboxOutput, "utf8"), /Build a compact onboarding screen/);
       assert.deepEqual(
         JSON.parse(await readFile(path.join(tempDir, "final-report.json"), "utf8")),
         report
