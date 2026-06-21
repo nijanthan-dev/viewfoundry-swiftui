@@ -176,8 +176,9 @@ tests never require provider secrets.
 Use the mocked pipeline for the first prompt-to-report path. It validates the
 request, writes a design brief, writes mockup artifacts, asks the deterministic
 planner stub to lower the brief to the first static generator IR subset, writes
-deterministic SwiftUI into the sandbox generated view, skips simulator-only
-steps in CI, and writes a final report with completed/skipped steps.
+`swiftui/generator-ir.json`, writes deterministic SwiftUI into the sandbox
+generated view, skips simulator-only steps in CI, and writes a final report with
+completed/skipped/failed steps.
 
 Current command:
 
@@ -198,8 +199,8 @@ npm run pipeline:mock -- \
 
 Current coverage lives in `packages/runtime/tests/unit/pipeline.test.ts` and
 covers the no-simulator path, optional diff path, CLI artifact writing, and a
-diff failure path. Real imagegen, production SwiftUI generation, and simulator
-capture remain separate future stages.
+generation and diff failure path. Real imagegen, production SwiftUI generation,
+and simulator capture remain separate future stages.
 
 ## Planner Stub Tests
 

@@ -40,9 +40,15 @@ describe("mock pipeline", () => {
       assert.equal(report.status, "blocked");
       assert.equal(report.primaryPassed, false);
       assert.equal(report.steps.find((step) => step.step === "imagegen")?.status, "completed");
+      assert.equal(report.steps.find((step) => step.step === "generation")?.status, "completed");
       assert.equal(report.steps.find((step) => step.step === "screenshot")?.status, "skipped");
       assert.equal(report.steps.find((step) => step.step === "diff")?.status, "skipped");
+      assert.equal(report.generatorIRPath, path.join(tempDir, "swiftui", "generator-ir.json"));
       assert.equal(PNG.sync.read(await readFile(path.join(tempDir, "mockups", "target.png"))).width, 32);
+      assert.equal(
+        JSON.parse(await readFile(path.join(tempDir, "swiftui", "generator-ir.json"), "utf8")).version,
+        "generator-ir/v1"
+      );
       assert.match(await readFile(sandboxOutput, "utf8"), /Build a compact onboarding screen/);
       assert.deepEqual(
         JSON.parse(await readFile(path.join(tempDir, "swiftui", "generation-report.json"), "utf8"))
@@ -116,6 +122,8 @@ describe("mock pipeline", () => {
 
       assert.equal(report.artifactRoot, output);
       assert.equal(report.status, "blocked");
+      assert.equal(report.generatorIRPath, path.join(output, "swiftui", "generator-ir.json"));
+      assert.equal(report.generationReportPath, path.join(output, "swiftui", "generation-report.json"));
       assert.equal(report.steps.some((step: { status: string }) => step.status === "skipped"), true);
     } finally {
       await rm(tempDir, { recursive: true, force: true });
@@ -139,6 +147,36 @@ describe("mock pipeline", () => {
       assert.equal(report.status, "failed");
       assert.match(report.errors[0]?.message, /image dimensions differ/);
       assert.equal(report.steps.find((step) => step.step === "diff")?.status, "failed");
+    } finally {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+  });
+
+  it("writes a failed final report when SwiftUI generation fails", async () => {
+    const tempDir = await mkdtemp(path.join(tmpdir(), "viewfoundry-pipeline-"));
+
+    try {
+      const report = await runMockPipeline(parseRuntimeRequest(sample), {
+        artifactRoot: tempDir,
+        width: 32,
+        height: 48,
+        sandboxGeneratedFile: tempDir
+      });
+
+      assert.equal(report.status, "failed");
+      assert.equal(report.primaryPassed, false);
+      assert.equal(report.steps.find((step) => step.step === "generation")?.status, "failed");
+      assert.match(report.errors[0]?.message ?? "", /EISDIR|illegal operation on a directory/);
+      assert.equal(report.generatorIRPath, path.join(tempDir, "swiftui", "generator-ir.json"));
+      assert.equal(report.generationReportPath, undefined);
+      assert.deepEqual(
+        JSON.parse(await readFile(path.join(tempDir, "final-report.json"), "utf8")),
+        report
+      );
+      assert.equal(
+        JSON.parse(await readFile(path.join(tempDir, "swiftui", "generator-ir.json"), "utf8")).version,
+        "generator-ir/v1"
+      );
     } finally {
       await rm(tempDir, { recursive: true, force: true });
     }

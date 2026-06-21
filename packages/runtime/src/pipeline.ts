@@ -1,4 +1,5 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
 import { createArtifactPaths } from "./artifacts.js";
 import { createMockupStub } from "./mockup.js";
 import { createRunId } from "./placeholder.js";
@@ -7,6 +8,7 @@ import { writeSwiftUIEmission } from "./swiftui-emitter.js";
 import { parseRuntimeRequest } from "./validation.js";
 import { comparePngImages, VisualDiffError } from "./visual-diff.js";
 import type {
+  DesignBrief,
   FinalReport,
   RuntimeError,
   RuntimeRequest,
@@ -37,7 +39,8 @@ export interface MockPipelineReport extends FinalReport {
   designBriefPath: string;
   mockupPath: string;
   targetImagePath: string;
-  generationReportPath: string;
+  generatorIRPath?: string;
+  generationReportPath?: string;
 }
 
 const defaultSandboxGeneratedFile =
@@ -72,13 +75,37 @@ export async function runMockPipeline(
   });
   steps.push({ step: "imagegen", status: "completed", artifactPath: paths.mockup });
 
-  const generation = await writeSwiftUIEmission(planGeneratorIRFromBrief({
+  let generatorIRWritten = false;
+  const generation = await runGenerationStep({
     request,
-    designBrief: mockupResult.designBrief
-  }), {
+    designBrief: mockupResult.designBrief,
     artifactRoot,
-    sandboxGeneratedFile: options.sandboxGeneratedFile ?? defaultSandboxGeneratedFile
+    sandboxGeneratedFile: options.sandboxGeneratedFile ?? defaultSandboxGeneratedFile,
+    onGeneratorIRWritten: () => {
+      generatorIRWritten = true;
+    }
+  }).catch(async (error: unknown) => {
+    const runtimeError = toRuntimeError("generation", errorMessage(error));
+    errors.push(runtimeError);
+    steps.push({ step: "generation", status: "failed", reason: runtimeError.message });
+
+    const report = createReport({
+      runId,
+      status: "failed",
+      artifactRoot,
+      errors,
+      steps,
+      paths,
+      includeGeneratorIRPath: generatorIRWritten
+    });
+    await writeFile(paths.finalReport, `${JSON.stringify(report, null, 2)}\n`);
+    return undefined;
   });
+
+  if (!generation) {
+    return JSON.parse(await readFile(paths.finalReport, "utf8")) as MockPipelineReport;
+  }
+
   steps.push({
     step: "generation",
     status: "completed",
@@ -126,27 +153,84 @@ export async function runMockPipeline(
   }
 
   const status = determineStatus(diffReport, errors);
-  const report: MockPipelineReport = {
+  const report = createReport({
     runId,
     status,
-    primaryPassed: status === "passed",
     artifactRoot,
-    swiftuiEntryFile: generation.entryFile,
-    ...(diffReport && !(diffReport instanceof VisualDiffError)
-      ? { diffReportPath: paths.primaryDiffReport }
-      : {}),
     errors,
-    nextActions: createNextActions(status),
     steps,
-    requestPath: paths.request,
-    designBriefPath: paths.designBrief,
-    mockupPath: paths.mockup,
-    targetImagePath: paths.targetImage,
-    generationReportPath: paths.generationReport
-  };
+    paths,
+    generation,
+    diffReport
+  });
 
   await writeFile(paths.finalReport, `${JSON.stringify(report, null, 2)}\n`);
   return report;
+}
+
+interface GenerationStepInput {
+  request: RuntimeRequest;
+  designBrief: DesignBrief;
+  artifactRoot: string;
+  sandboxGeneratedFile: string;
+  onGeneratorIRWritten?: () => void;
+}
+
+async function runGenerationStep(input: GenerationStepInput) {
+  const paths = createArtifactPaths(input.artifactRoot);
+  const ir = planGeneratorIRFromBrief({
+    request: input.request,
+    designBrief: input.designBrief
+  });
+
+  await mkdir(path.dirname(paths.generatorIR), { recursive: true });
+  await writeFile(paths.generatorIR, `${JSON.stringify(ir, null, 2)}\n`);
+  input.onGeneratorIRWritten?.();
+
+  return writeSwiftUIEmission(ir, {
+    artifactRoot: input.artifactRoot,
+    sandboxGeneratedFile: input.sandboxGeneratedFile
+  });
+}
+
+interface CreateReportInput {
+  runId: string;
+  status: MockPipelineReport["status"];
+  artifactRoot: string;
+  errors: RuntimeError[];
+  steps: PipelineStepReport[];
+  paths: ReturnType<typeof createArtifactPaths>;
+  includeGeneratorIRPath?: boolean;
+  generation?: Awaited<ReturnType<typeof runGenerationStep>>;
+  diffReport?: VisualDiffReport | VisualDiffError;
+}
+
+function createReport(input: CreateReportInput): MockPipelineReport {
+  return {
+    runId: input.runId,
+    status: input.status,
+    primaryPassed: input.status === "passed",
+    artifactRoot: input.artifactRoot,
+    ...(input.generation ? { swiftuiEntryFile: input.generation.entryFile } : {}),
+    ...(input.generation || input.includeGeneratorIRPath
+      ? { generatorIRPath: input.paths.generatorIR }
+      : {}),
+    ...(input.diffReport && !(input.diffReport instanceof VisualDiffError)
+      ? { diffReportPath: input.paths.primaryDiffReport }
+      : {}),
+    errors: input.errors,
+    nextActions: createNextActions(input.status),
+    steps: input.steps,
+    requestPath: input.paths.request,
+    designBriefPath: input.paths.designBrief,
+    mockupPath: input.paths.mockup,
+    targetImagePath: input.paths.targetImage,
+    ...(input.generation ? { generationReportPath: input.paths.generationReport } : {})
+  };
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
 async function maybeRunDiff(

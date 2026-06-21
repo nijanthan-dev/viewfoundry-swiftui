@@ -212,14 +212,15 @@ Artifacts:
 - `.viewfoundry/runs/<run>/request.json`
 - `.viewfoundry/runs/<run>/design-brief.json`
 - `.viewfoundry/runs/<run>/mockups/target.png`
+- `.viewfoundry/runs/<run>/swiftui/generator-ir.json`
 - `.viewfoundry/runs/<run>/swiftui/Sources/ViewFoundryGeneratedView.swift`
 - `.viewfoundry/runs/<run>/swiftui/generation-report.json`
 - `.viewfoundry/runs/<run>/final-report.json`
 
 The mocked pipeline writes deterministic SwiftUI for the first generator IR
-subset by running the deterministic brief-to-IR planner stub, skips
-simulator-only steps in CI, and records completed/skipped steps with reasons in
-the final report.
+subset by running the deterministic brief-to-IR planner stub, persists the
+planner IR and emitter report artifacts, skips simulator-only steps in CI, and
+records completed/skipped/failed steps with reasons in the final report.
 
 Compare a mockup PNG to a captured screenshot PNG:
 

@@ -69,9 +69,10 @@ npm run pipeline:mock -- --input examples/runtime-request.sample.json --output .
 ```
 
 It uses the local mockup stub, lowers the request to the supported generator IR
-subset, writes deterministic SwiftUI into the generated sandbox view, skips
-simulator-only steps unless later commands provide those artifacts, and records
-completed/skipped steps in `final-report.json`.
+subset, writes `swiftui/generator-ir.json`, writes deterministic SwiftUI into
+the generated sandbox view, skips simulator-only steps unless later commands
+provide those artifacts, and records completed/skipped/failed steps in
+`final-report.json`.
 
 ## Verification Notes
 

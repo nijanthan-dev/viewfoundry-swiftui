@@ -42,6 +42,7 @@ Each run writes artifacts under:
   swiftui/
     Sources/
     Assets.xcassets/
+    generator-ir.json
     generation-report.json
   screenshots/
     primary.png
@@ -140,11 +141,11 @@ generation exists:
 The local stub writes this metadata plus a deterministic placeholder PNG. It
 must not require API keys or call a real image generation provider.
 
-The deterministic planner stub records the future planning provider boundary. It
-accepts the validated runtime request plus `design-brief.json`, validates that
-they match, emits `generator-ir/v1`, and records unsupported or fallback behavior
-through `unsupportedRequestParts` and `assumptions`. It must not require API
-keys or call a real LLM/planning provider.
+`swiftui/generator-ir.json` records the deterministic planner artifact. The
+planner accepts the validated runtime request plus `design-brief.json`,
+validates that they match, emits `generator-ir/v1`, and records unsupported or
+fallback behavior through `unsupportedRequestParts` and `assumptions`. It must
+not require API keys or call a real LLM/planning provider.
 
 `swiftui/generation-report.json` records generated output:
 
@@ -204,6 +205,7 @@ final report:
 - `designBriefPath` when a design brief was written
 - `mockupPath` when a mockup artifact was written
 - `targetImagePath` when a target mockup image was written
+- `generatorIRPath` when the planner wrote a generator IR artifact
 - `generationReportPath` when SwiftUI generation metadata was written
 - `errors`
 - `nextActions`
