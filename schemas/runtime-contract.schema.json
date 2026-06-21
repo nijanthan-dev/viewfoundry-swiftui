@@ -477,6 +477,9 @@
         "targetImagePath": {
           "type": "string"
         },
+        "generatorIRPath": {
+          "type": "string"
+        },
         "generationReportPath": {
           "type": "string"
         },

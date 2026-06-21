@@ -10,6 +10,7 @@ export interface ArtifactPaths {
   swiftui: string;
   swiftuiSources: string;
   swiftuiAssets: string;
+  generatorIR: string;
   generationReport: string;
   screenshots: string;
   primaryScreenshot: string;
@@ -31,6 +32,7 @@ export function createArtifactPaths(root: string): ArtifactPaths {
     swiftui: path.join(root, "swiftui"),
     swiftuiSources: path.join(root, "swiftui", "Sources"),
     swiftuiAssets: path.join(root, "swiftui", "Assets.xcassets"),
+    generatorIR: path.join(root, "swiftui", "generator-ir.json"),
     generationReport: path.join(root, "swiftui", "generation-report.json"),
     screenshots: path.join(root, "screenshots"),
     primaryScreenshot: path.join(root, "screenshots", "primary.png"),
