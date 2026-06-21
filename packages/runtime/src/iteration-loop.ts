@@ -56,6 +56,7 @@ export function planIterationState(input: PlanIterationStateInput): IterationSta
 
   const retryable = feedback.filter((item) => item.retryable);
   if (retryable.length === 0) {
+    const blocker = stoppingFeedback(feedback);
     return {
       runId: input.runId,
       attempt,
@@ -63,7 +64,7 @@ export function planIterationState(input: PlanIterationStateInput): IterationSta
       status: input.finalStatus,
       ...(lastError ? { lastError } : {}),
       feedback,
-      stopReason: feedback[0]?.message ?? "No retryable feedback is available.",
+      stopReason: blocker?.message ?? "No retryable feedback is available.",
       artifacts: input.artifacts ?? []
     };
   }
@@ -174,6 +175,14 @@ function lastRuntimeError(feedback: IterationFeedback[]): RuntimeError | undefin
     message: item.message,
     retryable: item.retryable
   };
+}
+
+function stoppingFeedback(feedback: IterationFeedback[]): IterationFeedback | undefined {
+  return (
+    feedback.find((candidate) => candidate.source === "report" && !candidate.retryable) ??
+    feedback.find((candidate) => !candidate.retryable) ??
+    feedback[0]
+  );
 }
 
 function validatePositiveInteger(value: number, name: string): number {

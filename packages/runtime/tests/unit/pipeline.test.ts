@@ -98,6 +98,10 @@ describe("mock pipeline", () => {
       assert.equal(report.primaryPassed, false);
       assert.equal(report.steps.find((step) => step.step === "diff")?.status, "completed");
       assert.equal(JSON.parse(await readFile(path.join(tempDir, "diffs", "primary-report.json"), "utf8")).passed, true);
+      assert.match(
+        JSON.parse(await readFile(path.join(tempDir, "iteration-state.json"), "utf8")).stopReason,
+        /screenshot metadata is unavailable/
+      );
     } finally {
       await rm(tempDir, { recursive: true, force: true });
     }
