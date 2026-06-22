@@ -9,7 +9,7 @@ Use this skill for ViewFoundry SwiftUI repo work that turns a visual target into
 
 ## Workflow
 
-1. Read `../../AGENTS.md` before issue work, PRs, reviews, merges, or skill updates.
+1. Read `../../../../AGENTS.md` before issue work, PRs, reviews, merges, or skill updates when working from this repo.
 2. Read `references/architecture.md` before changing project scope, plugin shape, generator boundaries, simulator policy, or App Intents assumptions.
 3. Read `references/workflow.md` before implementing a mockup-to-SwiftUI iteration, verification pass, or sandbox template update.
 4. Read `references/review-learnings.md` before fixing Codex review feedback or changing workflow, CI, release, screenshot, report, schema, or mocked-pipeline behavior.

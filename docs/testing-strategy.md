@@ -46,13 +46,15 @@ test -f docs/runtime-contract.md
 test -f .gitleaks.toml
 test -f .pre-commit-config.yaml
 test -f docs/release.md
-test -f .codex-plugin/plugin.json
+test -f .agents/plugins/marketplace.json
+test -f plugins/viewfoundry-swiftui/.codex-plugin/plugin.json
+test -f scripts/validate-plugin.mjs
 test -f schemas/runtime-contract.schema.json
-test -f skills/viewfoundry/SKILL.md
-test -f skills/viewfoundry/references/architecture.md
-test -f skills/viewfoundry/references/workflow.md
-test -f skills/viewfoundry/references/review-learnings.md
-test -f skills/viewfoundry/assets/swiftui-sandbox-template/ViewFoundrySandboxApp.swift
+test -f plugins/viewfoundry-swiftui/skills/viewfoundry/SKILL.md
+test -f plugins/viewfoundry-swiftui/skills/viewfoundry/references/architecture.md
+test -f plugins/viewfoundry-swiftui/skills/viewfoundry/references/workflow.md
+test -f plugins/viewfoundry-swiftui/skills/viewfoundry/references/review-learnings.md
+test -f plugins/viewfoundry-swiftui/skills/viewfoundry/assets/swiftui-sandbox-template/ViewFoundrySandboxApp.swift
 test -f examples/Sandbox/ViewFoundrySandbox.xcodeproj/project.pbxproj
 test -f examples/Sandbox/ViewFoundrySandbox.xcodeproj/xcshareddata/xcschemes/ViewFoundrySandbox.xcscheme
 test -f examples/Sandbox/ViewFoundrySandbox/ViewFoundrySandboxApp.swift
@@ -88,17 +90,17 @@ grep -q "@Codex" CONTRIBUTING.md
 grep -q "one pull request per issue" CONTRIBUTING.md
 grep -q "private vulnerability" SECURITY.md
 grep -q "squash merges" GOVERNANCE.md
-grep -q "Create a repo skill" skills/viewfoundry/references/workflow.md
-grep -q "Update the skill" skills/viewfoundry/references/workflow.md
-grep -q "Review Handling" skills/viewfoundry/references/review-learnings.md
-grep -q "VIEWFOUNDRY_BUILD_CONFIGURATION" skills/viewfoundry/references/review-learnings.md
+grep -q "Create a repo skill" plugins/viewfoundry-swiftui/skills/viewfoundry/references/workflow.md
+grep -q "Update the skill" plugins/viewfoundry-swiftui/skills/viewfoundry/references/workflow.md
+grep -q "Review Handling" plugins/viewfoundry-swiftui/skills/viewfoundry/references/review-learnings.md
+grep -q "VIEWFOUNDRY_BUILD_CONFIGURATION" plugins/viewfoundry-swiftui/skills/viewfoundry/references/review-learnings.md
 grep -q "Generator Plan And Fixtures" docs/generator-plan.md
 grep -q "packages/runtime/tests/fixtures/generator" docs/generator-plan.md
 grep -q "ViewFoundryGeneratedView" examples/Sandbox/ViewFoundrySandbox/ViewFoundrySandboxApp.swift
 grep -q "Summary (Why these changes are required)?" .github/pull_request_template.md
 grep -q "What changes are in this PR" .github/pull_request_template.md
 grep -q "Testing details" .github/pull_request_template.md
-node -e 'for (const file of [".codex-plugin/plugin.json", "schemas/runtime-contract.schema.json"]) JSON.parse(require("fs").readFileSync(file, "utf8"))'
+node -e 'for (const file of ["plugins/viewfoundry-swiftui/.codex-plugin/plugin.json", "schemas/runtime-contract.schema.json"]) JSON.parse(require("fs").readFileSync(file, "utf8"))'
 ```
 
 The same scaffold checks can run in Docker:
@@ -318,15 +320,24 @@ Rules:
 ## Plugin And Skill Checks
 
 Validate the Codex plugin manifest and bundled skill when the local validator is
-available:
+available. The checked-in validator is the required local contract:
 
 ```sh
-python3 /path/to/plugin-creator/scripts/validate_plugin.py .
+npm run plugin:validate
+npm run plugin:smoke
 ```
 
-If that validator is unavailable or lacks dependencies, manually check that the
-manifest is valid JSON, points at `./skills/`, has no TODO placeholders, and the
-skill has frontmatter with non-empty `name` and `description`.
+The plugin root is `plugins/viewfoundry-swiftui/`. Repo marketplace metadata
+lives at `.agents/plugins/marketplace.json` and points to
+`./plugins/viewfoundry-swiftui`.
+
+`plugin:validate` checks marketplace metadata, manifest shape and URLs, `./`
+relative paths, path containment, skill frontmatter, required references/assets,
+package contents, and forbidden secret or generated metadata text.
+
+`plugin:smoke` copies the plugin to a temporary package root, validates the
+package copy, installs that copy into a temporary Codex-style plugin root, and
+validates the installed copy.
 
 Validate runtime schema stubs with Node JSON parsing until a schema validator is
 added:
@@ -339,7 +350,7 @@ node -e 'JSON.parse(require("fs").readFileSync("schemas/runtime-contract.schema.
 
 The Swift sandbox project lives at `examples/Sandbox/ViewFoundrySandbox.xcodeproj`.
 The checked-in skill asset remains a seed template at
-`skills/viewfoundry/assets/swiftui-sandbox-template/ViewFoundrySandboxApp.swift`.
+`plugins/viewfoundry-swiftui/skills/viewfoundry/assets/swiftui-sandbox-template/ViewFoundrySandboxApp.swift`.
 The stable local build command is:
 
 ```sh
@@ -416,6 +427,8 @@ Automatic CI:
 - `npm run check`
 - `npm run smoke:cli`
 - `npm run pack:dry-run`
+- `npm run plugin:validate`
+- `npm run plugin:smoke`
 - `npm run secrets`
 - Gitleaks action scan
 - `pre-commit run --all-files`

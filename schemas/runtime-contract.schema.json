@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/nijanthanvijayakumar/viewfoundry-swiftui/schemas/runtime-contract.schema.json",
+  "$id": "https://github.com/nijanthan-dev/viewfoundry-swiftui/schemas/runtime-contract.schema.json",
   "title": "ViewFoundry Runtime Request",
   "description": "Schema stub for the future ViewFoundry SwiftUI runner request. Artifact shapes live in $defs until the runner exists.",
   "$ref": "#/$defs/RuntimeRequest",
