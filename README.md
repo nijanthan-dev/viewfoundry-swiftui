@@ -65,6 +65,8 @@ npm run pipeline:mock -- --input examples/runtime-request.sample.json --output .
 npm run diff:image -- --target <target.png> --actual <actual.png> --diff <diff.png> --report <report.json>
 npm run sandbox:build
 npm run sandbox:screenshot
+npm run plugin:validate
+npm run plugin:smoke
 npm run check
 npm run secrets
 pre-commit run --all-files
@@ -81,13 +83,15 @@ test -f docs/generator-plan.md
 test -f docs/runtime-contract.md
 test -f .gitleaks.toml
 test -f .pre-commit-config.yaml
-test -f .codex-plugin/plugin.json
-test -f skills/viewfoundry/SKILL.md
+test -f .agents/plugins/marketplace.json
+test -f plugins/viewfoundry-swiftui/.codex-plugin/plugin.json
+test -f plugins/viewfoundry-swiftui/skills/viewfoundry/SKILL.md
+test -f scripts/validate-plugin.mjs
 test -f examples/Sandbox/ViewFoundrySandbox.xcodeproj/project.pbxproj
 test -f examples/Sandbox/ViewFoundrySandbox/ViewFoundrySandboxApp.swift
 test -f examples/Sandbox/ViewFoundrySandbox/Generated/ViewFoundryGeneratedView.swift
 test -f schemas/runtime-contract.schema.json
-node -e 'for (const file of [".codex-plugin/plugin.json", "schemas/runtime-contract.schema.json"]) JSON.parse(require("fs").readFileSync(file, "utf8"))'
+node -e 'for (const file of ["plugins/viewfoundry-swiftui/.codex-plugin/plugin.json", "schemas/runtime-contract.schema.json"]) JSON.parse(require("fs").readFileSync(file, "utf8"))'
 ```
 
 Testing decisions and staged command contracts live in
@@ -114,10 +118,11 @@ docker run --rm viewfoundry-swiftui-check
 Current container behavior:
 
 - Verifies core docs plus the plugin manifest, ViewFoundry skill, references,
-  and SwiftUI sandbox template.
+  marketplace metadata, and SwiftUI sandbox template.
 - Installs npm dependencies.
 - Runs `npm run check`.
-- Runs CLI smoke and package dry-run checks when npm scripts exist.
+- Runs CLI smoke, package dry-run, plugin validation, and plugin package/install
+  smoke checks when npm scripts exist.
 
 Docker does not run Xcode, SwiftUI sandbox, or iOS Simulator checks. Run those
 on a macOS host with Xcode installed when the Swift/iOS targets exist.
@@ -323,6 +328,6 @@ runner policy.
 - [Governance](GOVERNANCE.md)
 - [Testing Strategy](docs/testing-strategy.md)
 - [Runtime Contract](docs/runtime-contract.md)
-- [Plugin Manifest](.codex-plugin/plugin.json)
-- [ViewFoundry Skill](skills/viewfoundry/SKILL.md)
-- [Issues](https://github.com/nijanthanvijayakumar/viewfoundry-swiftui/issues)
+- [Plugin Manifest](plugins/viewfoundry-swiftui/.codex-plugin/plugin.json)
+- [ViewFoundry Skill](plugins/viewfoundry-swiftui/skills/viewfoundry/SKILL.md)
+- [Issues](https://github.com/nijanthan-dev/viewfoundry-swiftui/issues)

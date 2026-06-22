@@ -12,13 +12,15 @@ test -f docs/testing-strategy.md
 test -f docs/generator-plan.md
 test -f docs/release.md
 test -f .github/pull_request_template.md
-test -f .codex-plugin/plugin.json
+test -f .agents/plugins/marketplace.json
+test -f plugins/viewfoundry-swiftui/.codex-plugin/plugin.json
+test -f scripts/validate-plugin.mjs
 test -f schemas/runtime-contract.schema.json
-test -f skills/viewfoundry/SKILL.md
-test -f skills/viewfoundry/references/architecture.md
-test -f skills/viewfoundry/references/workflow.md
-test -f skills/viewfoundry/references/review-learnings.md
-test -f skills/viewfoundry/assets/swiftui-sandbox-template/ViewFoundrySandboxApp.swift
+test -f plugins/viewfoundry-swiftui/skills/viewfoundry/SKILL.md
+test -f plugins/viewfoundry-swiftui/skills/viewfoundry/references/architecture.md
+test -f plugins/viewfoundry-swiftui/skills/viewfoundry/references/workflow.md
+test -f plugins/viewfoundry-swiftui/skills/viewfoundry/references/review-learnings.md
+test -f plugins/viewfoundry-swiftui/skills/viewfoundry/assets/swiftui-sandbox-template/ViewFoundrySandboxApp.swift
 test -f examples/Sandbox/ViewFoundrySandbox.xcodeproj/project.pbxproj
 test -f examples/Sandbox/ViewFoundrySandbox.xcodeproj/xcshareddata/xcschemes/ViewFoundrySandbox.xcscheme
 test -f examples/Sandbox/ViewFoundrySandbox/ViewFoundrySandboxApp.swift
@@ -56,10 +58,10 @@ grep -q "@Codex" CONTRIBUTING.md
 grep -q "one pull request per issue" CONTRIBUTING.md
 grep -q "private vulnerability" SECURITY.md
 grep -q "squash merges" GOVERNANCE.md
-grep -q "Create a repo skill" skills/viewfoundry/references/workflow.md
-grep -q "Update the skill" skills/viewfoundry/references/workflow.md
-grep -q "Review Handling" skills/viewfoundry/references/review-learnings.md
-grep -q "VIEWFOUNDRY_BUILD_CONFIGURATION" skills/viewfoundry/references/review-learnings.md
+grep -q "Create a repo skill" plugins/viewfoundry-swiftui/skills/viewfoundry/references/workflow.md
+grep -q "Update the skill" plugins/viewfoundry-swiftui/skills/viewfoundry/references/workflow.md
+grep -q "Review Handling" plugins/viewfoundry-swiftui/skills/viewfoundry/references/review-learnings.md
+grep -q "VIEWFOUNDRY_BUILD_CONFIGURATION" plugins/viewfoundry-swiftui/skills/viewfoundry/references/review-learnings.md
 grep -q "Provider Boundary Tests" docs/testing-strategy.md
 grep -q "provider network: disabled" README.md
 grep -q "local stubs only" SECURITY.md
@@ -71,7 +73,7 @@ grep -q "Summary (Why these changes are required)?" .github/pull_request_templat
 grep -q "What changes are in this PR" .github/pull_request_template.md
 grep -q "Testing details" .github/pull_request_template.md
 
-node -e 'for (const file of [".codex-plugin/plugin.json", "schemas/runtime-contract.schema.json"]) JSON.parse(require("fs").readFileSync(file, "utf8"))'
+node -e 'for (const file of ["plugins/viewfoundry-swiftui/.codex-plugin/plugin.json", "schemas/runtime-contract.schema.json"]) JSON.parse(require("fs").readFileSync(file, "utf8"))'
 
 has_script() {
   node -e 'const pkg = require("./package.json"); process.exit(pkg.scripts && Object.prototype.hasOwnProperty.call(pkg.scripts, process.argv[1]) ? 0 : 1)' "$1"
@@ -110,6 +112,14 @@ if [ -f package.json ]; then
 
   if has_script pack:dry-run; then
     npm run pack:dry-run
+  fi
+
+  if has_script plugin:validate; then
+    npm run plugin:validate
+  fi
+
+  if has_script plugin:smoke; then
+    npm run plugin:smoke
   fi
 else
   echo "No package.json yet; ran scaffold checks only."

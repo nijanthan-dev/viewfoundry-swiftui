@@ -34,10 +34,10 @@ generated release notes.
 Before tagging, run the current scaffold checks:
 
 ```sh
-test -f README.md
-test -f LICENSE
-test -f docs/testing-strategy.md
-test -f docs/release.md
+npm run plugin:validate
+npm run plugin:smoke
+npm run check
+npm run secrets
 ```
 
 Optional Docker check:
@@ -54,4 +54,10 @@ version tag is pushed.
 ## Not Published Yet
 
 This repo is still scaffold-only. Releases do not publish npm packages, Swift
-packages, binaries, archives, Docker images, app builds, or plugin artifacts.
+packages, binaries, archives, Docker images, app builds, or external plugin
+artifacts.
+
+The Codex plugin is packaged in-repo at `plugins/viewfoundry-swiftui/` and
+represented in `.agents/plugins/marketplace.json`. CI validates that package and
+runs a local package/install smoke test, but #54 owns any future release artifact
+publishing.

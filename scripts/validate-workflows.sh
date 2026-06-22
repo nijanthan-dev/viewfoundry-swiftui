@@ -24,6 +24,8 @@ grep -q 'pre-commit run --all-files' .github/workflows/ci.yml
 grep -q 'sh scripts/docker-check.sh' .github/workflows/ci.yml
 grep -q 'npm run smoke:cli' .github/workflows/ci.yml
 grep -q 'npm run pack:dry-run' .github/workflows/ci.yml
+grep -q 'npm run plugin:validate' .github/workflows/ci.yml
+grep -q 'npm run plugin:smoke' .github/workflows/ci.yml
 
 grep -q 'v\*\.\*\.\*' .github/workflows/release.yml
 grep -q -- '--verify-tag' .github/workflows/release.yml

@@ -2,7 +2,7 @@
 
 ## Scope
 
-- Use `skills/viewfoundry/SKILL.md` for repo work.
+- Use `plugins/viewfoundry-swiftui/skills/viewfoundry/SKILL.md` for repo work.
 - Work one issue at a time in a child worktree.
 - Do not start the next issue while the current PR is unmerged.
 - Treat `origin/main` and live GitHub PR/issue state as source of truth.
@@ -45,7 +45,7 @@
 
 ## Review Lessons
 
-- Use `skills/viewfoundry/references/review-learnings.md` before PR fixes,
+- Use `plugins/viewfoundry-swiftui/skills/viewfoundry/references/review-learnings.md` before PR fixes,
   release/CI edits, screenshot-runner edits, report/schema edits, or mocked
   pipeline changes.
 - Do not blindly implement reviewer text. Confirm the finding is still present

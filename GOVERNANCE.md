@@ -7,7 +7,7 @@ ViewFoundry SwiftUI is maintainer-led.
 - Use GitHub issues for scoped work.
 - Use one pull request per issue.
 - Keep architecture and workflow decisions in repo docs or
-  `skills/viewfoundry/references/`.
+  `plugins/viewfoundry-swiftui/skills/viewfoundry/references/`.
 - Prefer small, reversible decisions while the project is scaffold-stage.
 
 ## Merge Policy

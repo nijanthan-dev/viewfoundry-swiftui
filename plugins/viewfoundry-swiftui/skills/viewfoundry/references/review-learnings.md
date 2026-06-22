@@ -50,7 +50,7 @@ CI, release, screenshot, report, schema, or mocked-pipeline behavior.
 
 ## Manifest And Package Metadata
 
-- `.codex-plugin/plugin.json` must match the plugin schema; for this plugin,
+- `plugins/viewfoundry-swiftui/.codex-plugin/plugin.json` must match the plugin schema; for this plugin,
   `interface.defaultPrompt` is an array.
 - Keep `package.json` and `package-lock.json` workspace metadata in sync,
   including `bin` entries.
