@@ -1,5 +1,12 @@
 # ViewFoundry SwiftUI
 
+![WIP warning: do not clone or use yet](docs/assets/wip-warning.svg)
+
+> [!WARNING]
+> This repository is a public work-in-progress scaffold. Do not clone, fork, use,
+> package, or depend on it yet. APIs, generated SwiftUI output, release
+> artifacts, plugin packaging, and provider behavior are intentionally unstable.
+
 ViewFoundry SwiftUI is an early-stage project for exploring how a small,
 structured view description could map to SwiftUI.
 
@@ -35,8 +42,12 @@ and production SwiftUI generation out of scope until later issues.
 
 ## Local Setup
 
+> [!CAUTION]
+> Local setup is documented for maintainers only. External use is not supported
+> yet.
+
 ```sh
-git clone https://github.com/nijanthanvijayakumar/viewfoundry-swiftui.git
+git clone https://github.com/nijanthan-dev/viewfoundry-swiftui.git
 cd viewfoundry-swiftui
 npm install
 ```
