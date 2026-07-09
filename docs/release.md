@@ -15,7 +15,7 @@ Only tags matching `v*.*.*` trigger the release workflow.
 
 ## Create A Release
 
-1. Make sure `main` is green.
+1. Make sure local checks pass on `main`.
 2. Create and push a version tag:
 
 ```sh
@@ -58,6 +58,6 @@ packages, binaries, archives, Docker images, app builds, or external plugin
 artifacts.
 
 The Codex plugin is packaged in-repo at `plugins/viewfoundry-swiftui/` and
-represented in `.agents/plugins/marketplace.json`. CI validates that package and
-runs a local package/install smoke test, but #54 owns any future release artifact
-publishing.
+represented in `.agents/plugins/marketplace.json`. Manual CI validates that
+package and runs a local package/install smoke test, but #54 owns any future
+release artifact publishing.

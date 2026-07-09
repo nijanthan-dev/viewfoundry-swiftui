@@ -84,6 +84,8 @@ prompts, or mark mocked/no-screenshot paths as passed.
 - Store run artifacts under `.viewfoundry/runs/<run-id>/` when the runner exists.
 - Keep real imagegen provider credentials out of CI; use the deterministic
   mockup stub for contract and unit tests.
+- CI is manual-only via `workflow_dispatch`; do not assume PR or `main` pushes
+  start GitHub checks.
 - Keep expected/actual/diff image updates explicit when image fixtures exist.
 - Treat the current PNG diff score as a deterministic prototype only; it is not
   semantic or perceptual visual matching.

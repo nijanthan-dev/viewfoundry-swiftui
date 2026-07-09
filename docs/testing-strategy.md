@@ -192,9 +192,9 @@ covers:
 - CI no-network policy checks
 - local imagegen and planner test doubles
 
-Required CI and Docker checks must not set provider credentials, enable provider
+Manual CI and Docker checks must not set provider credentials, enable provider
 network access, or call real imagegen/LLM providers. Future real-provider tests
-must be opt-in and kept outside required CI until a separate issue promotes
+must be opt-in and kept outside manual CI until a separate issue promotes
 them.
 
 ## Mocked End-To-End Pipeline Tests
@@ -409,15 +409,15 @@ npm run diff:image -- \
 ```
 
 The screenshot command may call `xcodebuild` and `xcrun simctl`; keep that out
-of required CI until it is fast and reliable on GitHub-hosted macOS runners.
-The PNG diff command is covered by unit tests in required CI.
+of manual CI until it is fast and reliable on GitHub-hosted macOS runners.
+The PNG diff command is covered by unit tests in manual CI.
 
 ## CI And Local Split
 
-Required CI runs on every pull request, every push to `main`, and manual
-`workflow_dispatch` reruns. Stale pull request runs are canceled.
+CI is manual-only via `workflow_dispatch`. It does not run on pull requests or
+pushes to `main`.
 
-Automatic CI:
+Manual CI:
 
 - repo contract file and policy checks
 - `npm ci`

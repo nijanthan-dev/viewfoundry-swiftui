@@ -254,7 +254,7 @@ Default behavior:
 Future real-provider config may use `VIEWFOUNDRY_IMAGEGEN_PROVIDER`,
 `VIEWFOUNDRY_IMAGEGEN_API_KEY`, `VIEWFOUNDRY_PLANNER_PROVIDER`, and
 `VIEWFOUNDRY_PLANNER_API_KEY`. Missing-config errors name missing keys only and
-must not print configured values. Required CI and Docker checks must keep
+must not print configured values. Manual CI and Docker checks must keep
 provider behavior local and no-network.
 
 Compare a mockup PNG to a captured screenshot PNG:
@@ -304,16 +304,16 @@ Install the local hook once per checkout:
 pre-commit install
 ```
 
-CI and pre-commit both run Gitleaks.
+Manual CI and pre-commit both run Gitleaks.
 
 ## CI Coverage
 
-CI runs on pull requests, pushes to `main`, and manual reruns. Pull request
-concurrency cancels stale runs.
+CI is manual-only via `workflow_dispatch`. It does not run on pull requests or
+pushes to `main`.
 
-Automatic CI runs repo contract checks, `npm ci`, `npm run typecheck`,
-`npm test`, `npm run build`, `npm run check`, CLI smoke, package dry-run,
-Gitleaks, pre-commit, Docker checks, and workflow/release syntax checks.
+Manual CI runs repo contract checks, `npm ci`, `npm run typecheck`, `npm test`,
+`npm run build`, `npm run check`, CLI smoke, package dry-run, Gitleaks,
+pre-commit, Docker checks, and workflow/release syntax checks.
 
 Manual gates remain PR diff Gitleaks scanning before merge, release publishing
 verification, and simulator screenshot or Swift sandbox tests that need macOS

@@ -11,9 +11,11 @@ ruby -e 'require "yaml"; Dir[".github/workflows/*.yml"].sort.each { |file| YAML.
 test -f .github/workflows/ci.yml
 test -f .github/workflows/release.yml
 
-grep -Eq '^  pull_request:' .github/workflows/ci.yml
-grep -Eq '^  push:' .github/workflows/ci.yml
 grep -Eq '^  workflow_dispatch:' .github/workflows/ci.yml
+if grep -Eq '^  (pull_request|push):' .github/workflows/ci.yml; then
+  echo "CI must stay manual-only; remove automatic pull_request/push triggers." >&2
+  exit 1
+fi
 grep -Eq '^concurrency:' .github/workflows/ci.yml
 grep -q 'cancel-in-progress:' .github/workflows/ci.yml
 grep -q 'npm run typecheck' .github/workflows/ci.yml
